@@ -12,14 +12,17 @@ mass=1800
 events=1
 flavor="gluino" # gluino or stop
 cmEnergy="13.6TeV"
-ctau='1000' # mm
+ctau='0p1' # mm
 quarkDecay="heavy" # heavy or light
 neutralinoMass=1300
+crab=true
+njobs=1
+memory=1000
 
 prefix="mgToPythia_"$flavor$mass"to"$quarkDecay"qq_andChi10"$neutralinoMass"_ctau"$ctau"mm"
 
 gensim=true
-reco=true
+reco=false
 
 # -------------------------------------
 
@@ -45,18 +48,36 @@ recoOut="reco_"$events"Events.out"
 
 if $gensim; then
 
-    if [ ! -f data/$dir_name/$genSimRoot ]; then
+    if [ ! -f $dir_name/$genSimRoot ]; then
         echo "Starting step 0: GEN-SIM"
         
         if [ "$flavor" = "gluino" ]; then
             echo "Generating $events gluino R-hadrons events with mass $mass GeV and ctau $ctau mm decaying to $quarkDecay quarks"
             echo "Using MadGraph to Pythia interface for event generation"
-            cp mgToPythia_simulate_gluinoRhadron_decays_Run3.py $dir_name/.
-            cd $dir_name
-            cmsRun mgToPythia_simulate_gluinoRhadron_decays_Run3.py maxEvents=$events mass=$mass ctau=$ctau quarkDecay=$quarkDecay outputFile=data/$dir_name/$genSimRoot > "data/$dir_name/terminalOutput.log"
+            cp mgToPythia_simulate_gluinoRhadron_decays_Run3.py $dir_name/gensim.py
+
+            if $crab; then
+                echo "Submitting jobs to CRAB"
+                cp crabConfig.py $dir_name/.
+                cd $dir_name
+
+                sed -i "s/Type=gensim/Type=gensim/g" crabConfig.py
+                sed -i "s/maxEvents=10000/maxEvents=$events/g" crabConfig.py
+                sed -i "s/mass=1800/mass=$mass/g" crabConfig.py
+                sed -i "s/ctau=1000/ctau='$ctau'/g" crabConfig.py
+                sed -i "s/quarkDecay='heavy'/quarkDecay='$quarkDecay'/g" crabConfig.py
+                sed -i "s/njobs=100/njobs=$njobs/g" crabConfig.py
+                sed -i "s/memory=3000/memory=$memory/g" crabConfig.py
+
+                crab submit -c crabConfig.py
+            else
+                cd $dir_name
+                cmsRun gensim.py maxEvents=$events mass=$mass ctau=$ctau quarkDecay=$quarkDecay outputFile=$genSimRoot > "terminalOutput.log"
+            fi
+
         elif [ "$flavor" = "stop" ]; then
             echo "Generating $events stop R-hadrons events with mass $mass GeV and ctau $ctau mm decaying to $quarkDecay quarks"
-            cmsRun simulate_stopRhadron_decays_Run3.py maxEvents=$events mass=$mass ctau=$ctau quarkDecay=$quarkDecay outputFile=data/$dir_name/$genSimRoot > "data/$dir_name/terminalOutput.log"
+            cmsRun simulate_stopRhadron_decays_Run3.py maxEvents=$events mass=$mass ctau=$ctau quarkDecay=$quarkDecay outputFile=$genSimRoot > "terminalOutput.log"
         else
             echo "Invalid flavor specified. Please use 'gluino' or 'stop'."
             exit 1
