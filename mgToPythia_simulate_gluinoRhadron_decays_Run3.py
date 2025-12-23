@@ -92,8 +92,8 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
     ),
     eventAutoFlushCompressedSize = cms.untracked.int32(20971520),
     fileName = cms.untracked.string(outputFile),
-    #outputCommands = process.RAWSIMEventContent.outputCommands,
-    outputCommands = cms.untracked.vstring('keep *'),
+    outputCommands = process.RAWSIMEventContent.outputCommands,
+    #outputCommands = cms.untracked.vstring('keep *'),
     splitLevel = cms.untracked.int32(0)
 )
 
