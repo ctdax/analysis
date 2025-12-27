@@ -9,20 +9,19 @@
 # CONTROL CENTER ----------------------
 
 mass=1800
-events=1
+events=10000
 flavor="gluino" # gluino or stop
 cmEnergy="13.6TeV"
-ctau='0p1' # mm
+ctau='10000' # mm
 quarkDecay="heavy" # heavy or light
 neutralinoMass=1300
-crab=true
-njobs=1
-memory=1000
 
 prefix="mgToPythia_"$flavor$mass"to"$quarkDecay"qq_andChi10"$neutralinoMass"_ctau"$ctau"mm"
 
-gensim=true
-reco=false
+gensim=false
+digi=true
+reco=true
+miniAOD=true
 
 # -------------------------------------
 
@@ -55,25 +54,8 @@ if $gensim; then
             echo "Generating $events gluino R-hadrons events with mass $mass GeV and ctau $ctau mm decaying to $quarkDecay quarks"
             echo "Using MadGraph to Pythia interface for event generation"
             cp mgToPythia_simulate_gluinoRhadron_decays_Run3.py $dir_name/gensim.py
-
-            if $crab; then
-                echo "Submitting jobs to CRAB"
-                cp crabConfig.py $dir_name/.
-                cd $dir_name
-
-                sed -i "s/Type=gensim/Type=gensim/g" crabConfig.py
-                sed -i "s/maxEvents=10000/maxEvents=$events/g" crabConfig.py
-                sed -i "s/mass=1800/mass=$mass/g" crabConfig.py
-                sed -i "s/ctau=1000/ctau='$ctau'/g" crabConfig.py
-                sed -i "s/quarkDecay='heavy'/quarkDecay='$quarkDecay'/g" crabConfig.py
-                sed -i "s/njobs=100/njobs=$njobs/g" crabConfig.py
-                sed -i "s/memory=3000/memory=$memory/g" crabConfig.py
-
-                crab submit -c crabConfig.py
-            else
-                cd $dir_name
-                cmsRun gensim.py maxEvents=$events mass=$mass ctau=$ctau quarkDecay=$quarkDecay outputFile=$genSimRoot > "terminalOutput.log"
-            fi
+            cd $dir_name
+            cmsRun gensim.py maxEvents=$events mass=$mass ctau=$ctau quarkDecay=$quarkDecay outputFile=$genSimRoot > "terminalOutput.log"
 
         elif [ "$flavor" = "stop" ]; then
             echo "Generating $events stop R-hadrons events with mass $mass GeV and ctau $ctau mm decaying to $quarkDecay quarks"
@@ -88,7 +70,7 @@ if $gensim; then
 
 fi
 
-if $reco; then
+if $digi; then
 
     if [ ! -f $digiRawRoot ]; then
         echo "Starting step 1: DIGI-L1-DIGI2RAW"
@@ -99,12 +81,14 @@ if $reco; then
             --datatier GEN-SIM-RAW \
             --conditions 150X_mcRun3_2025_realistic_v2 \
             --step DIGI,L1,DIGI2RAW \
-            --python_filename step1_cfg.py \
+            --python_filename digi.py \
             --era Run3_2025 \
             -n -1 >& $digiRawOut
         echo "Step 1 completed"
     fi
+fi
 
+if $reco; then
     if [ ! -f $recoRoot ]; then
         echo "Starting step 2: RAW2DIGI-L1Reco-RECO"
         cmsDriver.py --filein file:$digiRawRoot \
@@ -114,10 +98,26 @@ if $reco; then
             --datatier AODSIM \
             --conditions 150X_mcRun3_2025_realistic_v2 \
             --step RAW2DIGI,L1Reco,RECO \
-            --python_filename step2_cfg.py \
+            --python_filename reco.py \
             --era Run3_2025 \
             -n -1 >& $recoOut
         echo "Step 2 completed"
     fi
-    
+fi
+
+if $miniAOD; then
+    echo "Starting step 3: RECO-MINIAOD"
+    miniAODRoot="miniAOD_"$events"Events.root"
+    miniAODOut="miniAOD_"$events"Events.out"
+    cmsDriver.py --filein file:$recoRoot \
+        --fileout file:$miniAODRoot \
+        --mc \
+        --eventcontent MINIAODSIM \
+        --datatier MINIAODSIM \
+        --conditions 150X_mcRun3_2025_realistic_v2 \
+        --step PAT \
+        --python_filename miniAOD.py \
+        --era Run3_2025 \
+        -n -1 >& $miniAODOut
+    echo "Step 3 completed"
 fi
