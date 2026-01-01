@@ -4,6 +4,12 @@
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
 # with command line options: --filein file:digiraw_10000Events.root --fileout file:reco_10000Events.root --mc --eventcontent FEVTDEBUGHLT --datatier AODSIM --conditions 150X_mcRun3_2025_realistic_v2 --step RAW2DIGI,L1Reco,RECO --python_filename reco.py --era Run3_2025 -n -1
 import FWCore.ParameterSet.Config as cms
+from FWCore.ParameterSet.VarParsing import VarParsing
+
+# Define options
+options = VarParsing('python')
+options.outputFile = 'file:reco_10000Events.root'
+options.parseArguments()
 
 from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
 
@@ -79,7 +85,7 @@ process.FEVTDEBUGHLToutput = cms.OutputModule("PoolOutputModule",
         dataTier = cms.untracked.string('AODSIM'),
         filterName = cms.untracked.string('')
     ),
-    fileName = cms.untracked.string(),
+    fileName = cms.untracked.string(options.outputFile),
     outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )

@@ -4,6 +4,12 @@
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
 # with command line options: --filein file:/eos/user/c/cthompso/data/mgToPythia_gluino1800toheavyqq_andChi101300_ctau1000mm/crab_projects/crab_gensim_gluino1800_1000mm_heavyDecay_10000Events/results/gensim.root --fileout file:digiraw_10000Events.root --mc --eventcontent RAWSIM --datatier GEN-SIM-RAW --conditions 150X_mcRun3_2025_realistic_v2 --step DIGI,L1,DIGI2RAW --python_filename digi.py --era Run3_2025 -n -1
 import FWCore.ParameterSet.Config as cms
+from FWCore.ParameterSet.VarParsing import VarParsing
+
+# Define options
+options = VarParsing('python')
+options.outputFile = 'file:digiraw_10000Events.root'
+options.parseArguments()
 
 from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
 
@@ -102,7 +108,7 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
         filterName = cms.untracked.string('')
     ),
     eventAutoFlushCompressedSize = cms.untracked.int32(20971520),
-    fileName = cms.untracked.string(),
+    fileName = cms.untracked.string(options.outputFile),
     outputCommands = process.RAWSIMEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )

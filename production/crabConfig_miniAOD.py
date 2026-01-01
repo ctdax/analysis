@@ -1,8 +1,8 @@
 import sys
 from CRABClient.UserUtilities import config
 
-Type='reco'
-inputDataset='/gensim_noPU_gluino1800_1000mm_heavyDecay_10000Events/cthompso-digi_noPU_gluino1800_1000mm_heavyDecay_10000Events-35be8e8bd747831b431179aea21ce35c/USER'
+Type='miniAOD'
+inputDataset='/gensim_noPU_gluino1800_1000mm_heavyDecay_10000Events/cthompso-reco_noPU_gluino1800_1000mm_heavyDecay_10000Events-0a7623ffb3e17311de012aded75a5bb5/USER'
 maxEvents=10000
 mass=1800
 ctau='1000'

@@ -4,7 +4,6 @@
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
 # with command line options: --filein file:reco_10000Events.root --fileout file:miniAOD_10000Events.root --mc --eventcontent MINIAODSIM --datatier MINIAODSIM --conditions 150X_mcRun3_2025_realistic_v2 --step PAT --python_filename miniAOD.py --era Run3_2025 -n -1
 import FWCore.ParameterSet.Config as cms
-
 from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
 
 process = cms.Process('PAT',Run3_2025)

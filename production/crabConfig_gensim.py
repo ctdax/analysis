@@ -6,7 +6,7 @@ maxEvents=10000
 mass=1800
 ctau=1000
 quarkDecay='heavy'
-njobs=100
+njobs=50
 memory=3000
 
 config = config()
