@@ -6,6 +6,11 @@
 import FWCore.ParameterSet.Config as cms
 from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
 
+# Define options
+options = VarParsing('python')
+options.outputFile = 'file:miniAOD_10000Events.root'
+options.parseArguments()
+
 process = cms.Process('PAT',Run3_2025)
 
 # import of standard configurations
@@ -83,7 +88,7 @@ process.MINIAODSIMoutput = cms.OutputModule("PoolOutputModule",
     dropMetaData = cms.untracked.string('ALL'),
     eventAutoFlushCompressedSize = cms.untracked.int32(-900),
     fastCloning = cms.untracked.bool(False),
-    fileName = cms.untracked.string('file:miniAOD_10000Events.root'),
+    fileName = cms.untracked.string(options.outputFile),
     outputCommands = process.MINIAODSIMEventContent.outputCommands,
     overrideBranchesSplitLevel = cms.untracked.VPSet(
         cms.untracked.PSet(
@@ -195,6 +200,11 @@ from PhysicsTools.PatAlgos.slimming.miniAOD_tools import miniAOD_customizeAllMC
 
 #call to customisation function miniAOD_customizeAllMC imported from PhysicsTools.PatAlgos.slimming.miniAOD_tools
 process = miniAOD_customizeAllMC(process)
+
+# Disable trigger processing since HLT is not available in input AOD
+# This removes the PAT trigger modules that are causing the error
+from PhysicsTools.PatAlgos.tools.trigTools import switchOffTriggerMatchingOld
+switchOffTriggerMatchingOld(process, ['All'])
 
 # End of customisation functions
 

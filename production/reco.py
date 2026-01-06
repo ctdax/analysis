@@ -2,16 +2,15 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: --filein file:digiraw_10000Events.root --fileout file:reco_10000Events.root --mc --eventcontent FEVTDEBUGHLT --datatier AODSIM --conditions 150X_mcRun3_2025_realistic_v2 --step RAW2DIGI,L1Reco,RECO --python_filename reco.py --era Run3_2025 -n -1
+# with command line options: --filein file:hlt_1Events.root --fileout file:reco_1Events.root --mc --eventcontent AODSIM --datatier AODSIM --conditions 150X_mcRun3_2025_realistic_v2 --geometry DB:Extended --step RAW2DIGI,L1Reco,RECO --python_filename reco.py --era Run3_2025 -n -1
 import FWCore.ParameterSet.Config as cms
-from FWCore.ParameterSet.VarParsing import VarParsing
+
+from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
 
 # Define options
 options = VarParsing('python')
 options.outputFile = 'file:reco_10000Events.root'
 options.parseArguments()
-
-from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
 
 process = cms.Process('RECO',Run3_2025)
 
@@ -36,6 +35,7 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring('file:hlt_1Events.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -80,14 +80,17 @@ process.configurationMetadata = cms.untracked.PSet(
 
 # Output definition
 
-process.FEVTDEBUGHLToutput = cms.OutputModule("PoolOutputModule",
+process.AODSIMoutput = cms.OutputModule("PoolOutputModule",
+    compressionAlgorithm = cms.untracked.string('LZMA'),
+    compressionLevel = cms.untracked.int32(4),
     dataset = cms.untracked.PSet(
         dataTier = cms.untracked.string('AODSIM'),
         filterName = cms.untracked.string('')
     ),
+    eventAutoFlushCompressedSize = cms.untracked.int32(31457280),
     fileName = cms.untracked.string(options.outputFile),
-    outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands,
-    splitLevel = cms.untracked.int32(0)
+    outputCommands = process.AODSIMEventContent.outputCommands,
+    overrideInputFileSplitLevels = cms.untracked.bool(True)
 )
 
 # Additional output definition
@@ -101,10 +104,10 @@ process.raw2digi_step = cms.Path(process.RawToDigi)
 process.L1Reco_step = cms.Path(process.L1Reco)
 process.reconstruction_step = cms.Path(process.reconstruction)
 process.endjob_step = cms.EndPath(process.endOfProcess)
-process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
+process.AODSIMoutput_step = cms.EndPath(process.AODSIMoutput)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.FEVTDEBUGHLToutput_step)
+process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.AODSIMoutput_step)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
 
