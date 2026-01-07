@@ -13,7 +13,7 @@ memory=3000
 config = config()
 
 config.section_('General')
-config.General.requestName = f'{Type}_noPU_gluino{mass}_{ctau}mm_{quarkDecay}Decay_{maxEvents}Events'
+config.General.requestName = f'{Type}_gluino{mass}_{ctau}mm_{quarkDecay}Decay_{maxEvents}Events'
 config.General.workArea = '/eos/user/c/cthompso/crab_projects'
 config.General.transferOutputs = True
 config.General.instance = 'prod'

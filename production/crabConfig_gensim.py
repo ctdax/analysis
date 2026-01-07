@@ -4,7 +4,7 @@ from CRABClient.UserUtilities import config
 Type='gensim'
 maxEvents=10000
 mass=1800
-ctau=1000
+ctau='0p1'
 quarkDecay='heavy'
 njobs=50
 memory=3000
@@ -12,7 +12,7 @@ memory=3000
 config = config()
 
 config.section_('General')
-config.General.requestName = f'{Type}_noPU_gluino{mass}_{ctau}mm_{quarkDecay}Decay_{maxEvents}Events'
+config.General.requestName = f'{Type}_gluino{mass}_{ctau}mm_{quarkDecay}Decay_{maxEvents}Events'
 config.General.workArea = '/eos/user/c/cthompso/crab_projects'
 config.General.transferOutputs = True
 config.General.instance = 'prod'
@@ -31,7 +31,7 @@ config.Data.totalUnits = maxEvents
 config.Data.unitsPerJob = njobs
 config.Data.outputDatasetTag = config.General.requestName
 config.Data.outLFNDirBase = '/store/user/cthompso/HSCP'
-config.Data.outputPrimaryDataset = f'{Type}_noPU_gluino{mass}_{ctau}mm_{quarkDecay}Decay_{maxEvents}Events'
+config.Data.outputPrimaryDataset = f'{Type}_gluino{mass}_{ctau}mm_{quarkDecay}Decay_{maxEvents}Events'
 config.Data.publication = True
 
 config.section_('Site')
