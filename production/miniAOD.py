@@ -4,14 +4,15 @@
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
 # with command line options: --filein file:reco_10000Events.root --fileout file:miniAOD_10000Events.root --mc --eventcontent MINIAODSIM --datatier MINIAODSIM --conditions 150X_mcRun3_2025_realistic_v2 --step PAT --python_filename miniAOD.py --era Run3_2025 -n -1
 import FWCore.ParameterSet.Config as cms
-from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
+from FWCore.ParameterSet.VarParsing import VarParsing
+from Configuration.Eras.Era_Run3_2024_cff import Run3_2024
 
 # Define options
 options = VarParsing('python')
 options.outputFile = 'file:miniAOD_10000Events.root'
 options.parseArguments()
 
-process = cms.Process('PAT',Run3_2025)
+process = cms.Process('PAT',Run3_2024)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -152,7 +153,7 @@ process.MINIAODSIMoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '150X_mcRun3_2025_realistic_v2', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '150X_mcRun3_2024_realistic_v2', '')
 
 # Path and EndPath definitions
 process.Flag_BadChargedCandidateFilter = cms.Path(process.BadChargedCandidateFilter)

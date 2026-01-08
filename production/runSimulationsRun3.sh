@@ -15,17 +15,20 @@ cmEnergy="13.6TeV"
 ctau='1000' # mm
 quarkDecay="heavy" # heavy or light
 neutralinoMass=1300
+conditions="150X_mcRun3_2024_realistic_v2"
+era="Run3_2024"
 madgraph=false
 pileup_filelist="dbs:/Neutrino_E-10_gun/RunIIISummer24PrePremix-Premixlib2024_140X_mcRun3_2024_realistic_v26-v1/PREMIX"
+hlt_menu="HLT:GRun" # HLT:GRun is the default, 2025v13 and 2024v14 are also options. However 2024v14 is deprecated
 
 if $madgraph; then
-    prefix=$flavor$mass"to"$quarkDecay"qq_andChi10"$neutralinoMass"_ctau"$ctau"mm_Madgraph"
+    prefix=$flavor$mass"to"$quarkDecay"qq_andChi10"$neutralinoMass"_ctau"$ctau"mm_Madgraph_"$conditions
 else
-    prefix=$flavor$mass"to"$quarkDecay"qq_andChi10"$neutralinoMass"_ctau"$ctau"mm"
+    prefix=$flavor$mass"to"$quarkDecay"qq_andChi10"$neutralinoMass"_ctau"$ctau"mm_"$conditions
 fi
 
 gensim=true
-premix=true
+premix=false
 digi=true
 hlt=true
 reco=true
@@ -86,20 +89,20 @@ fi
 
 if $premix; then
     if [ ! -f $premixRoot ]; then
-        echo "Starting step 0.5: Premixing"
+        echo "Starting step 1: Premixing"
         cmsDriver.py --filein file:$genSimRoot \
             --fileout file:$premixRoot \
             --mc \
             --eventcontent PREMIXRAW \
             --datatier GEN-SIM-DIGI \
-            --conditions 150X_mcRun3_2025_realistic_v2 \
+            --conditions "$conditions" \
             --geometry DB:Extended \
             --pileup_input "$pileup_filelist" \
             --step DIGI,DATAMIX,L1,DIGI2RAW \
             --python_filename premix.py \
             --procModifiers premix_stage2 \
             --datamix PreMix \
-            --era Run3_2025 \
+            --era "$era" \
             -n -1 >& $premixOut 
         echo "Step 0.5 completed"
     fi
@@ -107,16 +110,16 @@ if $premix; then
 elif $digi; then
     if [ ! -f $digiRawRoot ]; then
         echo "Starting step 1: DIGI-L1-DIGI2RAW"
-        cmsDriver.py --filein file:$premixRoot \
+        cmsDriver.py --filein file:$genSimRoot \
             --fileout file:$digiRawRoot\
             --mc \
             --eventcontent RAWSIM \
             --datatier GEN-SIM-RAW \
-            --conditions 150X_mcRun3_2025_realistic_v2 \
+            --conditions "$conditions" \
             --geometry DB:Extended \
             --step DIGI,L1,DIGI2RAW \
             --python_filename digi.py \
-            --era Run3_2025 \
+            --era "$era" \
             -n -1 >& $digiRawOut
         echo "Step 1 completed"
     fi
@@ -130,11 +133,11 @@ if $hlt; then
             --mc \
             --eventcontent RAWSIM \
             --datatier GEN-SIM-RAW \
-            --conditions 150X_mcRun3_2025_realistic_v2 \
-            --step HLT:GRun \
+            --conditions "$conditions" \
+            --step $hlt_menu \
             --geometry DB:Extended \
             --python_filename hlt.py \
-            --era Run3_2025 \
+            --era "$era" \
             -n -1 >& $hltOut
         echo "Step 1.5 completed"
     fi
@@ -148,11 +151,11 @@ if $reco; then
             --mc \
             --eventcontent AODSIM \
             --datatier AODSIM \
-            --conditions 150X_mcRun3_2025_realistic_v2 \
+            --conditions "$conditions" \
             --geometry DB:Extended \
             --step RAW2DIGI,L1Reco,RECO \
             --python_filename reco.py \
-            --era Run3_2025 \
+            --era "$era" \
             -n -1 >& $recoOut
         echo "Step 2 completed"
     fi
@@ -165,11 +168,11 @@ if $miniAOD; then
         --mc \
         --eventcontent MINIAODSIM \
         --datatier MINIAODSIM \
-        --conditions 150X_mcRun3_2025_realistic_v2 \
+        --conditions "$conditions" \
         --geometry DB:Extended \
         --step PAT \
         --python_filename miniAOD.py \
-        --era Run3_2025 \
+        --era "$era" \
         -n -1 >& $miniAODOut
     echo "Step 3 completed"
 fi

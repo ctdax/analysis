@@ -4,10 +4,11 @@
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
 # with command line options: --filein file:digiraw_1Events.root --fileout file:hlt_1Events.root --mc --eventcontent RAWSIM --datatier GEN-SIM-RAW --conditions 150X_mcRun3_2025_realistic_v2 --step HLT:GRun --geometry DB:Extended --python_filename hlt.py --era Run3_2025 -n -1
 import FWCore.ParameterSet.Config as cms
+from FWCore.ParameterSet.VarParsing import VarParsing
 
-from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
+from Configuration.Eras.Era_Run3_2024_cff import Run3_2024
 
-process = cms.Process('HLT',Run3_2025)
+process = cms.Process('HLT',Run3_2024)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -90,7 +91,7 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '150X_mcRun3_2025_realistic_v2', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '150X_mcRun3_2024_realistic_v2', '')
 
 # Path and EndPath definitions
 process.endjob_step = cms.EndPath(process.endOfProcess)
