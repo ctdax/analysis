@@ -11,9 +11,9 @@ options = VarParsing('python')
 options.outputFile = 'file:digiraw_10000Events.root'
 options.parseArguments()
 
-from Configuration.Eras.Era_Run3_2024_cff import Run3_2024
+from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
 
-process = cms.Process('DIGI2RAW',Run3_2024)
+process = cms.Process('DIGI2RAW',Run3_2025)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -117,7 +117,7 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '150X_mcRun3_2024_realistic_v2', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '150X_mcRun3_2025_realistic_v2', '')
 
 # Path and EndPath definitions
 process.digitisation_step = cms.Path(process.pdigi)

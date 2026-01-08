@@ -2,7 +2,7 @@ import sys
 from CRABClient.UserUtilities import config
 
 Type='premix'
-inputDataset='/gensim_gluino1800_0p1mm_lightDecay_10000Events/cthompso-gensim_gluino1800_0p1mm_lightDecay_10000Events-03adeb32831e36d194df00404504a695/USER'
+inputDataset='/gensim_noPU_gluino1800_1000mm_heavyDecay_10000Events/cthompso-reco_noPU_gluino1800_1000mm_heavyDecay_10000Events-0a7623ffb3e17311de012aded75a5bb5/USER'
 maxEvents=10000
 mass=1800
 ctau='1000'

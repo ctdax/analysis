@@ -5,13 +5,13 @@
 # with command line options: Configuration/GenProduction/python/EXO-RunIISummer20UL18GENSIM-00010-fragment.py --python_filename EXO-RunIISummer20UL18GENSIM-00010_1_cfg.py --eventcontent RAWSIM --customise SimG4Core/CustomPhysics/Exotica_HSCP_SIM_cfi.customise,Configuration/DataProcessing/Utils.addMonitoring --datatier GEN-SIM --fileout file:EXO-RunIISummer20UL18GENSIM-00010.root --conditions 106X_upgrade2018_realistic_v4 --beamspot Realistic25ns13TeVEarly2018Collision --step GEN,SIM --geometry DB:Extended --era Run2_2018 --no_exec --mc
 import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
-from Configuration.Eras.Era_Run3_2024_cff import Run3_2024
+from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
 from Configuration.Generator.Pythia8CommonSettings_cfi import *
 from Configuration.Generator.MCTunesRun3ECM13p6TeV.PythiaCP5Settings_cfi import *
 from Configuration.Generator.PSweightsPythia.PythiaPSweightsSettings_cfi import *
 
 options = VarParsing('analysis')
-process = cms.Process('SIM',Run3_2024)
+process = cms.Process('SIM',Run3_2025)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -102,7 +102,7 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
 # Other statements
 process.genstepfilter.triggerConditions=cms.vstring("generation_step")
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '150X_mcRun3_2024_realistic_v2', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '150X_mcRun3_2025_realistic_v2', '')
 
 process.dirhadrongenfilter = cms.EDFilter("MCParticlePairFilter",
     MaxEta = cms.untracked.vdouble(100.0, 100.0),
