@@ -16,11 +16,13 @@ Repository designed to track the progress and issues of my analysis.
 #### Fall 2026
 
 - [ ] Change and improve cuts, create signal region with ABCD background prediction
+- [ ] Make sure background models data in the control region. Apply scale factors past trigger plateau.
 - [ ] Begin writing CMS paper while we wait on centrally produced MC samples
-- [ ] Unblind signal region with data
+- [ ] Study systematics
 
 #### Spring 2027
 
+- [ ] Unblind signal region with data
 - [ ] Finish writing the CMS paper
 - [ ] Begin finishing thesis
 - [ ] Complete CMS group pre-approval
