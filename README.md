@@ -6,10 +6,10 @@ Repository designed to track the progress and issues of my analysis.
 
 #### Spring 2026
 
-- [ ] Merge R-hadron decays into CMSSW
+- [x] Merge R-hadron decays into CMSSW
 - [x] Produce private MC samples w/ 1800GeV gluino decaying to heavy quarks and 1300GeV neutralino with ctau=1000mm
-- [ ] Create cutflow in new framework
-- [ ] Obtain background samples from DAS
+- [x] Create cutflow in new framework
+- [x] Obtain background samples from DAS
 - [ ] Produce more private MC samples with lifetimes ctau={0.1-10,000}mm
 - [ ] Request centrally produced MC samples
 
